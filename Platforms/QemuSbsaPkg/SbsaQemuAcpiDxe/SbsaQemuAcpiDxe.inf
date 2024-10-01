@@ -28,12 +28,13 @@
   QemuSbsaPkg/QemuSbsaPkg.dec
 
 [LibraryClasses]
+  AcpiLib
   ArmLib
   BaseMemoryLib
   BaseLib
   DebugLib
   DxeServicesLib
-  FdtHelperLib
+  HardwareInfoLib
   PcdLib
   PrintLib
   UefiDriverEntryPoint
@@ -43,6 +44,10 @@
 [Pcd]
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiTableStorageFile
   gArmPlatformTokenSpaceGuid.PcdCoreCount
+  gQemuSbsaPkgTokenSpaceGuid.PcdGicItsBase
+  gQemuSbsaPkgTokenSpaceGuid.PcdSmmuBase
+  gArmTokenSpaceGuid.PcdGicDistributorBase
+  gArmTokenSpaceGuid.PcdGicRedistributorsBase
 
 [Depex]
   gEfiAcpiTableProtocolGuid                       ## CONSUMES
@@ -54,10 +59,6 @@
   gEfiAcpiTableProtocolGuid                       ## CONSUMES
 
 [FixedPcd]
-  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemRevision
-  gArmTokenSpaceGuid.PcdGicDistributorBase
-  gArmTokenSpaceGuid.PcdGicRedistributorsBase
-
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorId
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorRevision
   gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemId
