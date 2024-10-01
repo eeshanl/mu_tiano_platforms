@@ -86,6 +86,12 @@
   gQemuSbsaPkgTokenSpaceGuid.PcdChassisAssetTag|L""|VOID*|0x0000011C
   gQemuSbsaPkgTokenSpaceGuid.PcdChassisSKU|L""|VOID*|0x0000011D
 
+  gQemuSbsaPkgTokenSpaceGuid.PcdPlatformVersionMajor|0x0|UINT32|0x0000011E
+  gQemuSbsaPkgTokenSpaceGuid.PcdPlatformVersionMinor|0x0|UINT32|0x0000011F
+  # ARM Generic Interrupt Controller ITS
+  gQemuSbsaPkgTokenSpaceGuid.PcdGicItsBase|0|UINT64|0x00000120
+  gQemuSbsaPkgTokenSpaceGuid.PcdSmmuBase|0|UINT64|0x00000121
+
 [PcdsFixedAtBuild, PcdsDynamic, PcdsDynamicEx]
   gQemuSbsaPkgTokenSpaceGuid.PcdOvmfHostBridgePciDevId|0|UINT16|0x1b
 

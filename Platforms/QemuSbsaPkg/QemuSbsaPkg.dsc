@@ -93,6 +93,9 @@
 !include MdePkg/MdeLibs.dsc.inc
 
 [LibraryClasses.common]
+  AcpiLib|EmbeddedPkg/Library/AcpiLib/AcpiLib.inf
+  HardwareInfoLib|QemuSbsaPkg/Library/SbsaQemuHardwareInfoLib/SbsaQemuHardwareInfoLib.inf
+
   BaseCryptLib|CryptoPkg/Library/BaseCryptLibNull/BaseCryptLibNull.inf
   DebugPrintErrorLevelLib|MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
 
@@ -777,12 +780,6 @@
   gEfiMdePkgTokenSpaceGuid.PcdReportStatusCodePropertyMask|0x0f
   gEfiShellPkgTokenSpaceGuid.PcdShellFileOperationSize|0x20000
 
-  #
-  # ARM General Interrupt Controller
-  #
-  gArmTokenSpaceGuid.PcdGicDistributorBase|0x40060000
-  gArmTokenSpaceGuid.PcdGicRedistributorsBase|0x40080000
-
   # PPI #13
   gArmTokenSpaceGuid.PcdArmArchTimerSecIntrNum|29
   # PPI #14
@@ -830,6 +827,11 @@
   gEfiMdeModulePkgTokenSpaceGuid.PcdSmbiosEntryPointProvideMethod|0x2
 
 [PcdsDynamicDefault.common]
+  #
+  # ARM General Interrupt Controller
+  #
+  gArmTokenSpaceGuid.PcdGicDistributorBase|0x40060000
+  gArmTokenSpaceGuid.PcdGicRedistributorsBase|0x40080000
 
   # System Memory Size -- 1 MB initially, actual size will be fetched from DT
   gArmTokenSpaceGuid.PcdSystemMemorySize|0x08000000
@@ -874,6 +876,11 @@
   gQemuSbsaPkgTokenSpaceGuid.PcdChassisManufacturer|L"Palindrome"
   gQemuSbsaPkgTokenSpaceGuid.PcdChassisAssetTag|L"ProjectMu"
   gQemuSbsaPkgTokenSpaceGuid.PcdChassisSKU|L"NorthAmerica"
+
+  gQemuSbsaPkgTokenSpaceGuid.PcdGicItsBase|0
+  gQemuSbsaPkgTokenSpaceGuid.PcdSmmuBase|0x60050000
+  gQemuSbsaPkgTokenSpaceGuid.PcdPlatformVersionMajor|0x0
+  gQemuSbsaPkgTokenSpaceGuid.PcdPlatformVersionMinor|0x0
 
   #
   # IPv4 and IPv6 PXE Boot support.
@@ -1361,6 +1368,7 @@
   MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   QemuSbsaPkg/AcpiTables/AcpiTables.inf
   QemuSbsaPkg/SbsaQemuAcpiDxe/SbsaQemuAcpiDxe.inf
+  QemuSbsaPkg/SbsaQemuSmmuDxe/SbsaQemuSmmuDxe.inf
 
   #
   # Standalone MM drivers in non-secure world

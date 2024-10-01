@@ -12,7 +12,7 @@
 #include <Library/AcpiLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
-#include <Library/FdtHelperLib.h>
+#include <Library/HardwareInfoLib.h>
 #include <Library/MemoryAllocationLib.h>
 #include <Library/PcdLib.h>
 #include <Library/PrintLib.h>
@@ -21,24 +21,10 @@
 #include <Library/UefiLib.h>
 #include <Protocol/AcpiTable.h>
 
-/*
- * A Function to Compute the ACPI Table Checksum
- */
-VOID
-AcpiPlatformChecksum (
-  IN UINT8  *Buffer,
-  IN UINTN  Size
-  )
-{
-  UINTN  ChecksumOffset;
-
-  ChecksumOffset = OFFSET_OF (EFI_ACPI_DESCRIPTION_HEADER, Checksum);
-
-  // Set checksum field to 0 since it is used as part of the calculation
-  Buffer[ChecksumOffset] = 0;
-
-  Buffer[ChecksumOffset] = CalculateCheckSum8 (Buffer, Size);
-}
+/* Qemu smmu worked on this sha - a53b931645183bd0c15dd19ae0708fc3c81ecf1d
+QEMU emulator version 9.1.50 (v9.1.0-475-ga53b931645)
+Copyright (c) 2003-2024 Fabrice Bellard and the QEMU Project developers
+*/
 
 /*
  * A function that add the MADT ACPI table.
@@ -56,6 +42,9 @@ AddMadtTable (
   UINT8                 *New;
   UINT32                NumCores;
   UINT32                CoreIndex;
+  UINT64                GicItsBase;
+
+  GicItsBase = PcdGet64 (PcdGicItsBase);
 
   // Initialize MADT ACPI Header
   EFI_ACPI_6_0_MULTIPLE_APIC_DESCRIPTION_TABLE_HEADER  Header = {
@@ -86,7 +75,7 @@ AddMadtTable (
   EFI_ACPI_6_0_GIC_DISTRIBUTOR_STRUCTURE  Gicd =
     EFI_ACPI_6_0_GIC_DISTRIBUTOR_INIT (
       0,
-      FixedPcdGet32 (PcdGicDistributorBase),
+      PcdGet64 (PcdGicDistributorBase),
       0,
       3 /* GicVersion */
       );
@@ -102,6 +91,13 @@ AddMadtTable (
               (sizeof (EFI_ACPI_6_0_GIC_STRUCTURE) * NumCores) +
               sizeof (EFI_ACPI_6_0_GIC_DISTRIBUTOR_STRUCTURE) +
               sizeof (EFI_ACPI_6_0_GICR_STRUCTURE);
+  
+  // Initialize GIC ITS Structure
+  EFI_ACPI_6_5_GIC_ITS_STRUCTURE Gic_Its = SBSAQEMU_MADT_GIC_ITS_INIT(0);
+
+  if (GicItsBase > 0) {
+    TableSize += sizeof (EFI_ACPI_6_5_GIC_ITS_STRUCTURE);
+  }
 
   Status = gBS->AllocatePages (
                   AllocateAnyPages,
@@ -129,7 +125,7 @@ AddMadtTable (
     CopyMem (New, &Gicc, sizeof (EFI_ACPI_6_0_GIC_STRUCTURE));
     GiccPtr                   = (EFI_ACPI_6_0_GIC_STRUCTURE *)New;
     GiccPtr->AcpiProcessorUid = CoreIndex;
-    GiccPtr->MPIDR            = FdtHelperGetMpidr (CoreIndex);
+    GiccPtr->MPIDR            = GetMpidr (CoreIndex);
     New                      += sizeof (EFI_ACPI_6_0_GIC_STRUCTURE);
   }
 
@@ -140,6 +136,12 @@ AddMadtTable (
   // GIC ReDistributor Structure
   CopyMem (New, &Gicr, sizeof (EFI_ACPI_6_0_GICR_STRUCTURE));
   New += sizeof (EFI_ACPI_6_0_GICR_STRUCTURE);
+
+  if (GicItsBase > 0) {
+    // GIC ITS Structure
+    CopyMem (New, &Gic_Its, sizeof (EFI_ACPI_6_5_GIC_ITS_STRUCTURE));
+    New += sizeof (EFI_ACPI_6_5_GIC_ITS_STRUCTURE);
+  }
 
   AcpiPlatformChecksum ((UINT8 *)PageAddress, TableSize);
 
@@ -430,8 +432,7 @@ InitializeSbsaQemuAcpiDxe (
   EFI_ACPI_TABLE_PROTOCOL  *AcpiTable;
   UINT32                   NumCores;
 
-  // Parse the device tree and get the number of CPUs
-  NumCores = FdtHelperCountCpus ();
+  NumCores = GetCpuCount ();
   ASSERT (PcdGet32 (PcdCoreCount) == NumCores);
 
   // Check if ACPI Table Protocol has been installed

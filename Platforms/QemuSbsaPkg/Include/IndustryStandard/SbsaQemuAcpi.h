@@ -33,8 +33,17 @@
    EFI_ACPI_6_0_GICR,                        /* Type */                        \
    sizeof (EFI_ACPI_6_0_GICR_STRUCTURE),     /* Length */                      \
    EFI_ACPI_RESERVED_WORD,                   /* Reserved */                    \
-   FixedPcdGet32 (PcdGicRedistributorsBase), /* DiscoveryRangeBaseAddress */   \
+   PcdGet64 (PcdGicRedistributorsBase),      /* DiscoveryRangeBaseAddress */   \
    SBSAQEMU_MADT_GICR_SIZE                   /* DiscoveryRangeLength */        \
+   }
+
+#define SBSAQEMU_MADT_GIC_ITS_INIT(GicItsId) {                                 \
+   EFI_ACPI_6_5_GIC_ITS,                     /* Type */                        \
+   sizeof (EFI_ACPI_6_5_GIC_ITS_STRUCTURE),  /* Length */                      \
+   EFI_ACPI_RESERVED_WORD,                   /* Reserved */                    \
+   GicItsId,                                 /* GicItsId */                    \
+   PcdGet64 (PcdGicItsBase),                 /* PhysicalBaseAddress */         \
+   EFI_ACPI_RESERVED_DWORD                   /* Reserved2 */                   \
    }
 
 #define SBSAQEMU_ACPI_SCOPE_OP_MAX_LENGTH  5
