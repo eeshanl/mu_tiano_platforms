@@ -12,6 +12,7 @@
 #include <Library/AcpiLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
+#include <Library/HardwareInfoLib.h>
 #include <Library/FdtHelperLib.h>
 #include <Library/MemoryAllocationLib.h>
 #include <Library/PcdLib.h>
@@ -129,7 +130,7 @@ AddMadtTable (
     CopyMem (New, &Gicc, sizeof (EFI_ACPI_6_0_GIC_STRUCTURE));
     GiccPtr                   = (EFI_ACPI_6_0_GIC_STRUCTURE *)New;
     GiccPtr->AcpiProcessorUid = CoreIndex;
-    GiccPtr->MPIDR            = FdtHelperGetMpidr (CoreIndex);
+    GiccPtr->MPIDR            = GetMpidr (CoreIndex);
     New                      += sizeof (EFI_ACPI_6_0_GIC_STRUCTURE);
   }
 
@@ -431,7 +432,7 @@ InitializeSbsaQemuAcpiDxe (
   UINT32                   NumCores;
 
   // Parse the device tree and get the number of CPUs
-  NumCores = FdtHelperCountCpus ();
+  NumCores = GetCpuCount ();
   ASSERT (PcdGet32 (PcdCoreCount) == NumCores);
 
   // Check if ACPI Table Protocol has been installed

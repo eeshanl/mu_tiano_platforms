@@ -93,6 +93,9 @@
 !include MdePkg/MdeLibs.dsc.inc
 
 [LibraryClasses.common]
+  AcpiLib|EmbeddedPkg/Library/AcpiLib/AcpiLib.inf
+  HardwareInfoLib|QemuSbsaPkg/Library/SbsaQemuHardwareInfoLib/SbsaQemuHardwareInfoLib.inf
+
   BaseCryptLib|CryptoPkg/Library/BaseCryptLibNull/BaseCryptLibNull.inf
   DebugPrintErrorLevelLib|MdePkg/Library/BaseDebugPrintErrorLevelLib/BaseDebugPrintErrorLevelLib.inf
 
@@ -163,7 +166,9 @@
   ArmHvcLib|ArmPkg/Library/ArmHvcLib/ArmHvcLib.inf
   ArmGenericTimerCounterLib|ArmPkg/Library/ArmGenericTimerVirtCounterLib/ArmGenericTimerVirtCounterLib.inf
 
-  PlatformPeiLib|ArmPlatformPkg/PlatformPei/PlatformPeiLib.inf
+  # PlatformPeiLib|ArmPlatformPkg/PlatformPei/PlatformPeiLib.inf
+  PlatformPeiLib|QemuSbsaPkg/Library/SbsaPlatformPeiLib/PlatformPeiLib.inf
+
   MemoryInitPeiLib|ArmPlatformPkg/MemoryInitPei/MemoryInitPeiLib.inf
 
   # ARM PL031 RTC Driver
@@ -569,7 +574,7 @@
 
   gEfiMdeModulePkgTokenSpaceGuid.PcdTurnOffUsbLegacySupport|TRUE
 
-  gEfiMdeModulePkgTokenSpaceGuid.PcdRequireIommu|FALSE # don't require IOMMU
+  gEfiMdeModulePkgTokenSpaceGuid.PcdRequireIommu|TRUE # require IOMMU
   gEfiMdeModulePkgTokenSpaceGuid.PcdHiiOsRuntimeSupport|FALSE
   gEfiMdeModulePkgTokenSpaceGuid.PcdEnableVariableRuntimeCache|FALSE
 
@@ -1361,6 +1366,7 @@
   MdeModulePkg/Universal/Acpi/AcpiTableDxe/AcpiTableDxe.inf
   QemuSbsaPkg/AcpiTables/AcpiTables.inf
   QemuSbsaPkg/SbsaQemuAcpiDxe/SbsaQemuAcpiDxe.inf
+  QemuSbsaPkg/SbsaQemuSmmuDxe/SbsaQemuSmmuDxe.inf
 
   #
   # Standalone MM drivers in non-secure world
