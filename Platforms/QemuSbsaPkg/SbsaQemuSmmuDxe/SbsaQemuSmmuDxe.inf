@@ -1,0 +1,61 @@
+## @file  SbsaQemuSmmuDxe.inf
+# This package provides production standalone applications for the UEFI
+# Firmware. That do not depend on the shell or any other UEFI application.
+# This is targetted at promoting to open source and should be aligned with
+# Tianocore standards
+#
+# Copyright (C) Microsoft Corporation. All rights reserved.
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010006
+  BASE_NAME                      = SbsaQemuSmmuDxe
+  FILE_GUID                      = BE506866-85F2-45EC-AC01-9BBF39D4CA78
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = InitializeSbsaQemuSmmuDxe
+
+[Sources]
+  IoMmu.c
+  SbsaQemuSmmuDxe.c
+  Smmuv3Util.c
+
+[Guids]
+  gEfiSmmuConfigGuid
+
+[Pcd]
+  gQemuSbsaPkgTokenSpaceGuid.PcdSmmuBase
+  gArmPlatformTokenSpaceGuid.PcdCoreCount
+  gQemuSbsaPkgTokenSpaceGuid.PcdGicItsBase
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  ArmPlatformPkg/ArmPlatformPkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  MdePkg/MdePkg.dec
+  QemuSbsaPkg/QemuSbsaPkg.dec
+
+[LibraryClasses]
+  ArmLib
+  BaseLib
+  BaseMemoryLib
+  IoLib
+  TimerLib
+  AcpiLib
+  HardwareInfoLib
+  HobLib
+  MemoryAllocationLib
+  UefiDriverEntryPoint
+
+[Depex]
+  gEfiAcpiTableProtocolGuid                       ## CONSUMES
+
+[FixedPcd]
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorId
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultCreatorRevision
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemTableId
+  gEfiMdeModulePkgTokenSpaceGuid.PcdAcpiDefaultOemRevision
+
+[Protocols]
+  gEdkiiIoMmuProtocolGuid                         ## PRODUCES

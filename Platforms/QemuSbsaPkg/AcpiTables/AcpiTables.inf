@@ -31,10 +31,11 @@
   MdeModulePkg/MdeModulePkg.dec
   QemuSbsaPkg/QemuSbsaPkg.dec
 
-[FixedPcd]
+[Pcd]
   gArmTokenSpaceGuid.PcdGicDistributorBase
   gArmTokenSpaceGuid.PcdGicRedistributorsBase
 
+[FixedPcd]
   gArmTokenSpaceGuid.PcdArmArchTimerSecIntrNum
   gArmTokenSpaceGuid.PcdArmArchTimerIntrNum
   gArmTokenSpaceGuid.PcdArmArchTimerHypIntrNum
