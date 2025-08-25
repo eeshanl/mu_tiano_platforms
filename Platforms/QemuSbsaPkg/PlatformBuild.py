@@ -364,6 +364,8 @@ class PlatformBuilder(UefiBuilder, BuildSettingsManager):
         return 0
 
     def PlatformPostBuild(self):
+        logging.info("DOING NOTHING INSTEAD OF POST BUILD")
+        return 0
         src_dir = os.path.join(self.GetWorkspaceRoot (), "Platforms/QemuSbsaPkg/mu")
         dest_dir = os.path.join(self.GetWorkspaceRoot (), "Silicon/Arm/HAF/project/mu")
 

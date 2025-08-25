@@ -18,3 +18,5 @@ UefiDbgExt/x64/
 
 # Ignore Rust build output
 /target
+# Ignore Hafnium and TF-A build output
+Platforms/QemuSbsaPkg/HafTfaBuild/firmware_binaries/
