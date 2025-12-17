@@ -25,6 +25,8 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/microsoft/mu_devops/ubuntu-24-dev:latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Code
